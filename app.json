@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "OrderingSystem-Mobile",
+    "scheme": "orderingsystem-mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#368EEF"
+        "backgroundColor": "#f1f5f9"
       },
       "package": "com.resto.OrderingSystemMobile"
     },
