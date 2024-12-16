@@ -13,6 +13,7 @@ const header = () => {
 
   const handleMonitor = () => {
     console.log('monitor')
+    nav.navigate('(mycart)')
   }
 
   return (
@@ -27,7 +28,7 @@ const header = () => {
       </View>
       <View>
         <Pressable onPress={handleMonitor}>
-          <MaterialCommunityIcons name="order-bool-descending-variant" size={50} color="white" />
+          <MaterialCommunityIcons name="cart-variant" size={50} color="white" />
         </Pressable>
       </View>
     </View>

@@ -5,6 +5,9 @@ const _layout = () => {
   return (
     <Tabs
       screenOptions={{
+        sceneStyle:{
+            backgroundColor: '#f1f5f9'
+        },
         tabBarStyle: {
           height: "7%",
         },
@@ -50,6 +53,24 @@ const _layout = () => {
             tabBarStyle: {
                 display: "none"
             }
+        }}
+      />
+      <Tabs.Screen
+        name="(previewitem)"
+        options={{ 
+            headerShown: false, href: null,
+            // tabBarStyle: {
+            //     display: "none"
+            // }
+        }}
+      />
+      <Tabs.Screen
+        name="(mycart)"
+        options={{ 
+            headerShown: false, href: null,
+            // tabBarStyle: {
+            //     display: "none"
+            // }
         }}
       />
     </Tabs>
