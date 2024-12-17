@@ -23,7 +23,7 @@ const index = () => {
       } else if (backPressCount.current === 2) {
          Alert.alert(
           "Confirm Exit",
-          "Press back again to exit the app. Your current cart will be deleted.",
+          "Exiting the app will delete current cart.",
           [
             {
               text: "Cancel",

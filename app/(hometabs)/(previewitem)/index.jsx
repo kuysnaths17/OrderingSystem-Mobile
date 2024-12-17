@@ -25,40 +25,6 @@ const index = () => {
         nav.navigate('items')
     }
 
-    // const [backPressCount, setBackPressCount] = useState(0);
-    // const [exitTimeout, setExitTimeout] = useState(null);
-
-    // useEffect(() => {
-    //     const backAction = () => {
-    //         if (backPressCount === 0) {
-    //             setBackPressCount(1);
-    //             ToastAndroid.show('Press back again to exit the app', ToastAndroid.SHORT);
-
-    //             // Reset backPressCount after 2 seconds
-    //             setExitTimeout(setTimeout(() => {
-    //                 setBackPressCount(0);
-    //             }, 2000));
-
-    //             return true; // Prevent default behavior
-    //         } else if (backPressCount === 1) {
-    //             clearTimeout(exitTimeout); // Clear the timeout
-    //             // BackHandler.exitApp(); // Exit the app
-    //             returnBack();
-    //             return true; // Prevent default behavior
-    //         }
-    //     };
-
-    //     const backHandler = BackHandler.addEventListener(
-    //         'hardwareBackPress',
-    //         backAction
-    //     );
-
-    //     // Cleanup the event listener and timeout on component unmount
-    //     return () => {
-    //         backHandler.remove();
-    //         clearTimeout(exitTimeout);
-    //     };
-    // }, [backPressCount, exitTimeout]);
 
     useEffect(() => {
         const loadItems = async () => {

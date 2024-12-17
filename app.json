@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#f1f5f9"
+        "backgroundColor": "#368EEF"
       },
       "package": "com.resto.OrderingSystemMobile"
     },
@@ -31,7 +31,7 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#f1f5f9"
+          "backgroundColor": "#368EEF"
         }
       ]
     ],
