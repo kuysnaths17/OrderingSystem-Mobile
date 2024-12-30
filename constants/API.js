@@ -3,3 +3,4 @@ const cloudServer = '';
 const ApiServer = localServer;
 
 export const fetchItemByCategory = `${ApiServer}/mobile/fetchItemsByCategory`;
+export const fetchAllTables = `${ApiServer}/mobile/fetchAllTables`;

@@ -13,18 +13,12 @@ const index = () => {
     const nav = useNavigation();
     const route = useRoute();
     const { category, categoryTitle } = route.params;
-    console.log(category)
 
     const { addToCart } = useContext(CartContext);
 
     const [items, setItems] = React.useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
-
-    const returnBack = () => {
-        nav.navigate('items')
-    }
-
 
     useEffect(() => {
         const loadItems = async () => {
@@ -55,7 +49,7 @@ const index = () => {
     return (
         <View className='flex-1'>
             <Header />
-            <View className='relative py-10 bg-[#f4f9ff]'>
+            <View className='relative py-8 bg-[#f4f9ff]'>
                 <Text className='text-4xl font-bold text-gray-900 text-center' animation={'tada'}>{categoryTitle}</Text>
             </View>
             <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: '100%' }} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 30, padding: 20 }}>

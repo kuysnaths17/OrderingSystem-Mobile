@@ -58,7 +58,7 @@ const index = () => {
     };
   }, []);
   return (
-    <View>
+    <View className='flex-1'>
       <Header />
       <Text>index</Text>
       <View>

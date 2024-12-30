@@ -4,7 +4,7 @@
     "slug": "orderingsystem-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/ptg.ico",
     "scheme": "orderingsystem-mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/ptg.ico",
         "backgroundColor": "#368EEF"
       },
       "package": "com.resto.OrderingSystemMobile"
@@ -26,12 +26,10 @@
     "plugins": [
       "expo-router",
       [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+        "expo-splash-screen", {
+          "image": "./assets/images/splash.png",
           "resizeMode": "contain",
-          "backgroundColor": "#368EEF"
+          "backgroundColor": "#ffffff"
         }
       ]
     ],
