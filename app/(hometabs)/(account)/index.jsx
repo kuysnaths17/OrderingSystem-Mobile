@@ -1,16 +1,43 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Image, BackHandler, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-
-
+import { useMMKVBoolean } from 'react-native-mmkv';
+import { deleteUser, setLoggedIn, storage } from '@/constants/storageUtils';
 
 const index = () => {
   const nav = useNavigation();
-  
+  const [isloggedin, setIsloggedin] = useMMKVBoolean('isLoggedIn');
+
+
+  const logout = async () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            setIsloggedin(false);
+            deleteUser();
+            nav.jumpTo('index');
+          }
+        }
+      ]
+    );
+  }
+
+  const handleLOGOUT = () => {
+    logout();
+  }
+
   return (
     <View className='flex-1 relative'>
       <View className='justify-center items-center mt-20'>
-        <Image source={require('@/assets/images/pgtLOGO.png')} className='w-[90%] h-[25rem]' />
+        <Image source={require('@/assets/images/ptgLOGO.png')} className='w-[90%] h-[25rem]' />
       </View>
       <View>
         <View className='justify-center items-center mt-5'>
@@ -19,14 +46,26 @@ const index = () => {
         </View>
       </View>
       <View className='absolute bottom-16 w-full'>
-        <View className='flex flex-row justify-center items-center mt-5 gap-3'>
-          <TouchableOpacity className='w-[40%] h-[4rem] bg-[#368eef] rounded-xl justify-center items-center' onPress={() => nav.navigate('login')}>
-            <Text className='text-2xl font-semibold text-white'>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className={`w-[40%] h-[4rem] rounded-xl justify-center items-center border-[#368eef] border-hairline`} onPress={() => nav.navigate('register')}>
-            <Text className='text-2xl font-semibold text-black'>Register</Text>
-          </TouchableOpacity>
-        </View>
+        {isloggedin ? (
+          <>
+            <View className='flex flex-row justify-center items-center mt-5 gap-3'>
+              <TouchableOpacity className='w-[40%] h-[4rem] bg-[#e65d82] rounded-xl justify-center items-center' onPress={() => handleLOGOUT()}>
+                <Text className='text-2xl font-semibold text-white'>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <>
+            <View className='flex flex-row justify-center items-center mt-5 gap-3'>
+              <TouchableOpacity className='w-[40%] h-[4rem] bg-[#368eef] rounded-xl justify-center items-center' onPress={() => nav.navigate('login')}>
+                <Text className='text-2xl font-semibold text-white'>Login</Text>
+              </TouchableOpacity>
+              <TouchableOpacity className={`w-[40%] h-[4rem] rounded-xl justify-center items-center border-[#368eef] border-hairline`} onPress={() => nav.navigate('register')}>
+                <Text className='text-2xl font-semibold text-black'>Register</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     </View>
   )

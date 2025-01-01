@@ -1,11 +1,24 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native'
-import React, { useState, useContext } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, ScrollView, ToastAndroid } from 'react-native'
+import React, { useState, useContext, useEffect } from 'react'
 import { CartContext } from '@/constants/cartContext'
-
+import { useMMKVBoolean, useMMKVString } from 'react-native-mmkv';
+import { storage } from '@/constants/storageUtils';
+import { useNavigation } from '@react-navigation/native';
+import { insertOrder } from '@/constants/API';
+import axios from 'axios';
 
 const index = () => {
-    const { cart, removeFromCart, clearCart } = useContext(CartContext);
+    const { cart, removeFromCart, clearCart, reservedTable, clearReservation } = useContext(CartContext);
     const [quantities, setQuantities] = useState({});
+    const [islogged, setIsLogged] = useMMKVBoolean('isLoggedIn');
+
+    const navigation = useNavigation();
+    useEffect(() => {
+        Alert.alert(
+            'Information',
+            'Please always check your item quantity before proceeding to checkout',
+        )
+    }, [])
 
     const handleDelete = (itemId) => {
         Alert.alert(
@@ -32,6 +45,57 @@ const index = () => {
         );
     };
 
+    const order = async () => {
+        const data = {
+            customerId: 'ptg_' + JSON.parse(storage.getString('userId')),
+            tableID: reservedTable.tableID,
+            items: cart.map(item => ({
+                itemId: item._id,
+                itemName: item.name,
+                itemTotalPrice: item.price * (quantities[item._id] || 1),
+                quantity: quantities[item._id] || 1
+            })),
+            totalPrice: cart.reduce((acc, item) => acc + (item.price * (quantities[item._id] || 1)), 0)
+        }
+        try {
+            const response = await axios.post(insertOrder, data);
+            if(response.data.isCompleted) {
+                ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+                clearCart();
+                clearReservation();
+            }
+        } catch (error) {
+            ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+        }
+    }
+
+    const handlePayment = () => {
+        if (!reservedTable) {
+            Alert.alert(
+                'Error',
+                'Please reserve a table first before proceeding to payment',
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            navigation.navigate('tables');
+                        }
+                    }
+                ]
+            )
+            return;
+        }
+        if (cart.length === 0) {
+            Alert.alert(
+                'Error',
+                'Your cart is empty. Please add items to your cart before proceeding to payment.',
+            )
+            return;
+        }
+        order();
+
+    }
+
     const handleClearCart = () => {
         Alert.alert(
             "Confirm Clear Cart",
@@ -45,6 +109,7 @@ const index = () => {
                     text: "OK",
                     onPress: () => {
                         clearCart(); // Call the clearCart function
+                        clearReservation(); // Clear the reserved table
                         setQuantities({}); // Reset quantities
                     }
                 }
@@ -62,18 +127,24 @@ const index = () => {
 
     return (
         <View style={styles.container}>
-
+            <View>
+                <Text style={styles.title}>Reserved Table</Text>
+                <View className='flex flex-row justify-center items-center gap-10 border-b-2 border-[#368eef]'>
+                    <Text className='font-extrabold text-3xl'>Table Number : </Text>
+                    <Text className='font-extrabold text-3xl'>{ reservedTable?.tableNumber || 'N/A'}</Text>
+                </View>
+            </View>
             <Text style={styles.title}>Cart Items</Text>
             <View style={{ flex: 1 }}>
                 <ScrollView>
-                    {cart?.length === 0 ? (
+                    {cart?.length === 0 || !islogged ? (
                         <Text style={styles.emptyText}>Your cart is empty.</Text>
                     ) : (
                         cart?.map((item, index) => {
                             const quantity = quantities[item._id] || 1; // Default to 1 if not set
                             const totalPrice = item.price * quantity; // Calculate total price based on quantity
                             return (
-                                <View style={styles.row} key={index}>
+                                <View style={styles.row} key={item._id}>
                                     <Text style={styles.cell}>{item.name}</Text>
                                     <Text style={styles.cell}>₱{totalPrice}.00</Text>
                                     <View style={styles.quantityContainer}>
@@ -102,6 +173,9 @@ const index = () => {
                     )}
                 </ScrollView>
             </View>
+            <TouchableOpacity onPress={handlePayment} style={styles.paymentButton}>
+                <Text style={styles.clearButtonText}>Proceed to Payment</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleClearCart} style={styles.clearButton}>
                 <Text style={styles.clearButtonText}>Clear All</Text>
             </TouchableOpacity>
@@ -186,4 +260,11 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
+    paymentButton: {
+        backgroundColor: '#008a61',
+        borderRadius: 5,
+        padding: 10,
+        marginTop: 20,
+        alignItems: 'center',
+    }
 });

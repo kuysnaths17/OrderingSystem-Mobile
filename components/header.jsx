@@ -2,17 +2,32 @@ import { Text, View, Pressable, Image } from 'react-native'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import { storage, getUser} from '@/constants/storageUtils';
+import React, { useEffect, useState } from 'react';
+
 
 const header = () => {
   const nav = useNavigation();
+  const [sessionUser, setSessionUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getUser();
+      if (user) {
+        const userdata = JSON.parse(user);
+        const userSess = userdata.first_name + ' ' + userdata.last_name;
+        setSessionUser(userSess);
+      }
+    }
+    fetchUser()
+  }, [])
+
 
   const handleUser = () => {
-    console.log('user')
     nav.navigate('(account)')
   }
 
   const handleMonitor = () => {
-    console.log('monitor')
     nav.navigate('(mycart)')
   }
 
@@ -23,9 +38,12 @@ const header = () => {
           <Pressable onPress={handleUser}>
             <FontAwesome5 name="user-circle" size={50} color="white" />
           </Pressable>
+          {/* <Link to='/(account)/index'>
+            <FontAwesome5 name="user-circle" size={50} color="white" />
+          </Link> */}
         </View>
         <View >
-          <Text className='text-[white] text-3xl font-bold'>Prethegem</Text>
+          <Text className='text-[white] text-3xl font-bold'>{sessionUser || 'Prethegem'}</Text>
         </View>
         <View>
           <Pressable onPress={handleMonitor}>

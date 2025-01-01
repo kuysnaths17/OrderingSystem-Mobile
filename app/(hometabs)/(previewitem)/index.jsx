@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, ScrollView, Modal, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ScrollView, Modal, StyleSheet, ToastAndroid } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
@@ -7,12 +7,13 @@ import { fetchItemByCategory } from '@/constants/API';
 import axios from 'axios';
 import Header from '@/components/header';
 import { CartContext } from '@/constants/cartContext';
-
+import { useMMKVBoolean } from 'react-native-mmkv';
 
 const index = () => {
     const nav = useNavigation();
     const route = useRoute();
     const { category, categoryTitle } = route.params;
+    const [isLoggedIn, setIsLoggedIn] = useMMKVBoolean('isLoggedIn');
 
     const { addToCart } = useContext(CartContext);
 
@@ -30,6 +31,9 @@ const index = () => {
             }
         }
         loadItems();
+
+        const intervalId = setInterval(loadItems, 5000); // Fetch items every 5 seconds
+        return () => clearInterval(intervalId);
     }, [category])
 
     const openModal = (item) => {
@@ -42,6 +46,17 @@ const index = () => {
     };
 
     const addItemToCart = (selectedItem) => {
+        if(!isLoggedIn){
+            ToastAndroid.show("Please login/create an account to add item to cart", ToastAndroid.LONG);
+            closeModal();
+            return;
+        }
+        if (selectedItem.quantity === 0) {
+            ToastAndroid.show("This item is out of stock and cannot be added to the cart", ToastAndroid.LONG);
+            closeModal();
+            return;
+        }
+
         closeModal();
         addToCart(selectedItem);
     };
@@ -89,7 +104,7 @@ const index = () => {
                             </View>
                             <View className='gap-2'>
                                 <TouchableOpacity style={[styles.closeButton, {backgroundColor:'#2ec193'}]} onPress={()=>addItemToCart(selectedItem)}>
-                                    <Text style={styles.closeButtonText}>Add to list</Text>
+                                    <Text style={styles.closeButtonText}>Add to cart</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.closeButton, {backgroundColor:'#e65d82'}]} onPress={closeModal}>
                                     <Text style={styles.closeButtonText}>Close</Text>

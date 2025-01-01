@@ -16,7 +16,7 @@ const _layout = () => {
         },
       }}
     >
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="index"
         options={{
           title: "Home",
@@ -25,9 +25,9 @@ const _layout = () => {
             <Ionicons name="home" size={30} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
-        name="items"
+        name="index"
         options={{
           title: "Order",
           headerShown: false,

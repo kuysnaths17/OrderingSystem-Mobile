@@ -1,73 +1,54 @@
-import { StyleSheet, Text, View, BackHandler, Alert } from 'react-native'
-import React, { useEffect, useContext, useRef } from 'react'
+import { StyleSheet, Image, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Header from '@/components/header';
-import { CartContext } from '@/constants/cartContext'
+import axios from 'axios';
+import { fetchItemByCategory } from '@/constants/API';
+import { Text, View } from 'react-native-animatable';
 import { useNavigation } from 'expo-router';
+import { Link } from 'expo-router';
+import { getUser, deleteUser, checkLoggedIn } from '@/constants/storageUtils';
+
+import maincourse from '@/assets/images/maincourse.jpg';
+import appetizer from '@/assets/images/appetizer.jpg';
+import dessert from '@/assets/images/dessert.png';
+import beverages from '@/assets/images/beverages.png';
+import { useMMKVBoolean } from 'react-native-mmkv';
+
+const categs = [
+    { id: '1', catName: 'Main Course', catVal: 'main_course', img: maincourse },
+    { id: '2', catName: 'Appetizer', catVal: 'appetizer', img: appetizer },
+    { id: '3', catName: 'Dessert', catVal: 'dessert', img: dessert },
+    { id: '4', catName: 'Beverages', catVal: 'beverages', img: beverages },
+]
 
 const index = () => {
-  const { clearCart } = useContext(CartContext);
-  const backPressCount = useRef(0); // To keep track of back presses
-  const backPressTimeout = useRef(null); // To store the timeout reference
-  const nav = useNavigation();
-  useEffect(() => {
-    const backAction = () => {
-      backPressCount.current += 1; // Increment the back press count
+    const nav = useNavigation();
+    const [isLoggedIn, setIsLoggedIn] = useMMKVBoolean('isLoggedIn');
 
-      if (backPressCount.current === 1) {
-        if(nav.canGoBack()){
-          nav.goBack();
-        }
-        backPressTimeout.current = setTimeout(() => {
-          backPressCount.current = 0; // Reset count after timeout
-        }, 600);
-      } else if (backPressCount.current === 2) {
-         Alert.alert(
-          "Confirm Exit",
-          "Exiting the app will delete current cart.",
-          [
-            {
-              text: "Cancel",
-              onPress: () => {
-                backPressCount.current = 0; // Reset count if canceled
-              },
-              style: "cancel"
-            },
-            {
-              text: "OK",
-              onPress: () => {
-                clearCart(); // Clear the cart
-                BackHandler.exitApp(); // Exit the app
-              }
-            }
-          ]
-        );
-      }
-
-      return true; // Prevent default behavior
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    // Cleanup function to remove the listener and clear timeout
-    return () => {
-      backHandler.remove(); // Remove the listener
-      clearTimeout(backPressTimeout.current); // Clear the timeout
-    };
-  }, []);
-  return (
-    <View className='flex-1'>
-      <Header />
-      <Text>index</Text>
-      <View>
-
-      </View>
-    </View>
-  )
+    return (
+        <View className='flex-1'>
+            <Header />
+            <View className='relative'>
+                <View className='relative py-8 bg-[#f4f9ff]'>
+                    <Text className='text-4xl font-bold text-gray-900 text-center' animation={'tada'}>Categories</Text>
+                </View>
+                <View className='flex flex-row flex-wrap justify-evenly p-[15] pt-16 gap-10'>
+                    {categs.map((item, index) => (
+                        <Link key={index} className='w-[45%] h-[14rem] bg-[#a8c2f9] p-2 rounded-lg' href={{ pathname: '/(hometabs)/(previewitem)', params: { category: item.catVal, categoryTitle: item.catName } }}>
+                            <View className='w-[100%] h-[100%]'>
+                                <View className='w-[100%] h-[80%] bg-[#7c91bc] rounded-lg'>
+                                    <Image source={item.img} className='w-full h-full rounded-lg' />
+                                </View>
+                                <View>
+                                    <Text className='text-2xl font-bold text-gray-900 text-center mt-2'>{item.catName}</Text>
+                                </View>
+                            </View>
+                        </Link>
+                    ))}
+                </View>
+            </View>
+        </View>
+    )
 }
 
 export default index
-
-const styles = StyleSheet.create({})
