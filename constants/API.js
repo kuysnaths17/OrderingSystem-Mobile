@@ -9,3 +9,4 @@ export const createUser = `${ApiServer}/mobile/createUser`;
 export const loginUser = `${ApiServer}/mobile/loginUser`;
 
 export const insertOrder = `${ApiServer}/mobile/insertOrder`;
+export const getOrderStatus = `${ApiServer}/mobile/getOrderStatus`;

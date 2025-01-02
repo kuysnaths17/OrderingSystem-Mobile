@@ -2,13 +2,15 @@ import { Text, View, Pressable, Image } from 'react-native'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import { storage, getUser} from '@/constants/storageUtils';
+import { storage, getUser } from '@/constants/storageUtils';
 import React, { useEffect, useState } from 'react';
+
 
 
 const header = () => {
   const nav = useNavigation();
   const [sessionUser, setSessionUser] = useState(null);
+  const isloggedIn = storage.getBoolean('isLoggedIn');
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -20,7 +22,7 @@ const header = () => {
       }
     }
     fetchUser()
-  }, [])
+  }, [sessionUser, isloggedIn])
 
 
   const handleUser = () => {
@@ -38,12 +40,9 @@ const header = () => {
           <Pressable onPress={handleUser}>
             <FontAwesome5 name="user-circle" size={50} color="white" />
           </Pressable>
-          {/* <Link to='/(account)/index'>
-            <FontAwesome5 name="user-circle" size={50} color="white" />
-          </Link> */}
         </View>
         <View >
-          <Text className='text-[white] text-3xl font-bold'>{sessionUser || 'Prethegem'}</Text>
+          <Text className='text-[white] text-3xl font-bold'>{isloggedIn ? sessionUser : 'Prethegem'}</Text>
         </View>
         <View>
           <Pressable onPress={handleMonitor}>

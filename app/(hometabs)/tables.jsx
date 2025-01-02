@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, ScrollView, Modal, Button } from 'react-native'
+import { StyleSheet, TouchableOpacity, ScrollView, Modal, ToastAndroid } from 'react-native'
 import React, { useEffect, useContext } from 'react'
 import Header from '@/components/header';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import { fetchAllTables } from '@/constants/API';
 import { Text, View } from 'react-native-animatable';
 import { CartContext } from '@/constants/cartContext';
 import { useNavigation } from '@react-navigation/native';
+import { storage } from '@/constants/storageUtils';
 
 
 const tables = () => {
@@ -13,6 +14,7 @@ const tables = () => {
   const [tables, setTables] = React.useState([]);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [selectedTable, setSelectedTable] = React.useState({});
+  const isloggedIn = storage.getBoolean('isLoggedIn');
 
   const { reserveTable } = useContext(CartContext);
 
@@ -50,6 +52,10 @@ const tables = () => {
           tables?.map((table, index) => (
             <TouchableOpacity key={index} className='bg-[#a8c2f9] p-4 rounded-lg m-2 w-[45%] h-[14rem]'
               onPress={() => {
+                if(!isloggedIn){
+                  ToastAndroid.show("Please login/create an account to reserve a table", ToastAndroid.LONG);
+                  return;
+                }
                 setSelectedTable({tableNumber: table.tableNumber, status:table.status, tableID: table._id});
                 setIsModalVisible(true);
               }}
