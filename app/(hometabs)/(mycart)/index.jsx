@@ -4,11 +4,11 @@ import { CartContext } from '@/constants/cartContext'
 import { useMMKVBoolean, useMMKVObject, useMMKVString } from 'react-native-mmkv';
 import { storage } from '@/constants/storageUtils';
 import { useNavigation } from '@react-navigation/native';
-import { insertOrder } from '@/constants/API';
+
 import axios from 'axios';
 import QRCodeStyled from 'react-native-qrcode-styled';
 import { getOrderStatus } from '@/constants/API';
-
+const paymongoAPIKey = 'sk_test_zJeMvh98kvsqEmh4YNz1FdEg';
 
 const index = () => {
     const navigation = useNavigation();
@@ -59,7 +59,7 @@ const index = () => {
             return () => clearInterval(intervalId);
         }
 
-    }, [qrOrderID?.tableID])
+    }, [qrOrderID?.tableID, orderStatus]);
 
     useEffect(() => {
         if (!qrOrderID) {
@@ -95,37 +95,65 @@ const index = () => {
         );
     };
 
-    const order = async () => {
-        const data = {
-            customerId: JSON.parse(storage.getString('userId')),
-            tableID: reservedTable.tableID,
-            items: cart.map(item => ({
-                itemId: item._id,
-                itemImage: item.photoUrl,
-                itemName: item.name,
-                itemTotalPrice: item.price * (quantities[item._id] || 1),
-                quantity: quantities[item._id] || 1
-            })),
-            totalPrice: cart.reduce((acc, item) => acc + (item.price * (quantities[item._id] || 1)), 0),
-        }
-        console.log(data);
+    // const order = async () => {
+    //     const data = {
+    //         customerId: JSON.parse(storage.getString('userId')),
+    //         tableID: reservedTable.tableID,
+    //         items: cart.map(item => ({
+    //             itemId: item._id,
+    //             itemImage: item.photoUrl,
+    //             itemName: item.name,
+    //             itemTotalPrice: item.price * (quantities[item._id] || 1),
+    //             quantity: quantities[item._id] || 1
+    //         })),
+    //         totalPrice: cart.reduce((acc, item) => acc + (item.price * (quantities[item._id] || 1)), 0),
+    //     }
+    //     console.log(data);
+    //     try {
+    //         const response = await axios.post(insertOrder, data);
+    //         if (response.data.isCompleted) {
+    //             ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
+    //             // ToastAndroid.show(response.data.newOrder._id, ToastAndroid.SHORT);
+    //             const qrInfo = {
+    //                 qrid: response.data.newOrder._id,
+    //                 tableID: response.data.newOrder.tableID
+    //             }
+    //             storage.set('QRorderID', JSON.stringify(qrInfo));
+    //             clearCart();
+    //             clearReservation();
+    //         }
+    //     } catch (error) {
+    //         ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+    //     }
+    // }
+
+    const createPaymentLink = async () => {
         try {
-            const response = await axios.post(insertOrder, data);
-            if (response.data.isCompleted) {
-                ToastAndroid.show(response.data.message, ToastAndroid.SHORT);
-                // ToastAndroid.show(response.data.newOrder._id, ToastAndroid.SHORT);
-                const qrInfo = {
-                    qrid: response.data.newOrder._id,
-                    tableID: response.data.newOrder.tableID
+            const res = await axios.post('https://api.paymongo.com/v1/links', {
+                data: {
+                    attributes: {
+                        amount: 10000,
+                        description: 'Thank you for dining in with us',
+                    }
                 }
-                storage.set('QRorderID', JSON.stringify(qrInfo));
-                clearCart();
-                clearReservation();
+            }, {
+                headers: {
+                    Authorization: `Basic ${btoa(paymongoAPIKey + ':')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            // console.log(res.data);
+            const paymentInfos = {
+                paymentLinkID: res.data.data.id,
+                paymentLinkUrl: res.data.data.attributes.checkout_url
             }
-        } catch (error) {
-            ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+            // console.log(paymentInfos);
+            return paymentInfos;
+        } catch (err) {
+            console.error(err);
         }
     }
+
 
     const handlePayment = () => {
         if (!reservedTable) {
@@ -150,7 +178,12 @@ const index = () => {
             )
             return;
         }
-        order();
+
+        // order();
+        createPaymentLink().then(res => {
+            // console.log(res);
+            navigation.navigate('paymentwebview', { paymentLink: res, quantities: quantities });
+        });
 
     }
 
