@@ -74,7 +74,9 @@ const paymentwebview = () => {
         try {
             const data = {
                 customerId: JSON.parse(storage.getString('userId')),
+                customerName: JSON.parse(storage.getString('user')).first_name + ' ' + JSON.parse(storage.getString('user')).last_name,
                 tableID: reservedTable.tableID,
+                tableNumber: reservedTable.tableNumber,
                 items: cart.map(item => ({
                     itemId: item._id,
                     itemImage: item.photoUrl,
