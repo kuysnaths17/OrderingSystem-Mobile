@@ -65,7 +65,7 @@ const tables = () => {
                 <Text className='text-center font-bold text-7xl text-[#f4f9ff]'>{table.tableNumber}</Text>
               </View>
               <View>
-                <Text className='text-center text-3xl font-bold' style={{ color: table.status === 'available' ? '#008a61' : table.status === 'reserved' ? '#b18521' : table.status === 'occupied' ? '#f15a44' : null }}>{table.status}</Text>
+                <Text className='text-center text-3xl font-bold' style={{ color: table.status === 'available' ? '#008a61' : table.status === 'occupied' ? '#f15a44' : null }}>{table.status}</Text>
               </View>
             </TouchableOpacity>
           ))
