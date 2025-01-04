@@ -27,7 +27,7 @@ const index = () => {
                 const res = await axios.get(`${fetchItemByCategory}/${category}`);
                 setItems(res.data.items);
             } catch (error) {
-                console.log(error)
+                setItems([]);
             }
         }
         loadItems();
