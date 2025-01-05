@@ -1,16 +1,18 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { storage } from '@/constants/storageUtils';
+import { setLoggedIn, storage } from '@/constants/storageUtils';
 import { ToastAndroid } from 'react-native';
 
 export const CartContext = createContext();
 
-export const CartProvider = ({userId, children }) => {
+export const CartProvider = ({ userId, children }) => {
     const [cart, setCart] = useState([]);
     const [reservedTable, setReservedTable] = useState(null); // New state for reserved table
 
+    // Use "guest" as the userId if it is null or undefined
+    const resolvedUserId = userId || "guest";
     // Generate the storage key based on the user ID
-    const cartKey = `cart_${JSON.parse(userId)}`;
-    const tableKey = `table_${JSON.parse(userId)}`;
+    const cartKey = `cart_${resolvedUserId}`;
+    const tableKey = `table_${resolvedUserId}`;
     // console.log(cart);
     // Load cart from MMKV on initial render
     useEffect(() => {
@@ -41,12 +43,12 @@ export const CartProvider = ({userId, children }) => {
     const addToCart = (item) => {
         setCart((prevCart) => {
             const isItemInCart = prevCart.some(cartItem => cartItem._id === item._id);
-            
+
             if (isItemInCart) {
                 ToastAndroid.show('Item is already in the cart!', ToastAndroid.SHORT);
-                return prevCart; 
+                return prevCart;
             }
-            
+
             return [...prevCart, item];
         });
     };
