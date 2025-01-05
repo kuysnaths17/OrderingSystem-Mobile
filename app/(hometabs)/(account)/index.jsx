@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, BackHandler, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Image, BackHandler, Alert, Dimensions } from 'react-native'
+const { width, height } = Dimensions.get('window');
 import { useNavigation } from '@react-navigation/native';
 import { useMMKVBoolean } from 'react-native-mmkv';
 import { deleteUser, setLoggedIn, storage } from '@/constants/storageUtils';
@@ -37,12 +38,12 @@ const index = () => {
   return (
     <View className='flex-1 relative'>
       <View className='justify-center items-center mt-20'>
-        <Image source={require('@/assets/images/ptgLOGO.png')} className='w-[90%] h-[25rem]' />
+        <Image source={require('@/assets/images/ptgLOGO.png')} style={{height: height*0.35, width: width*0.75}} className='w-[90%] h-[25rem]' />
       </View>
       <View>
-        <View className='justify-center items-center mt-5'>
-          <Text className='text-5xl font-bold text-gray-900 mb-6'>Welcome to Prethegem</Text>
-          <Text className='text-xl font-semibold text-gray-900 text-center w-[85%]'>Hungry? Prethegem has you covered! Get ready for a taste adventure. We offer a wide selection of delicious dishes to satisfy every craving.</Text>
+        <View className='justify-center items-center mt-8'>
+          <Text className='text-4xl font-bold text-gray-900 mb-3'>Welcome to Prethegem</Text>
+          <Text className='text-xl font-semibold text-gray-900 text-center' style={{width: width*0.85 }}>Hungry? Prethegem has you covered! Get ready for a taste adventure. We offer a wide selection of delicious dishes to satisfy every craving.</Text>
         </View>
       </View>
       <View className='absolute bottom-16 w-full'>

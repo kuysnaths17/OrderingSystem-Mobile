@@ -1,4 +1,5 @@
-import { StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native'
+const { width, height } = Dimensions.get('window');
 import React, { useEffect, useState } from 'react'
 import Header from '@/components/header';
 import axios from 'axios';
@@ -34,7 +35,7 @@ const index = () => {
                 </View>
                 <View className='flex flex-row flex-wrap justify-evenly p-[15] pt-16 gap-10'>
                     {categs.map((item, index) => (
-                        <Link key={index} className='w-[45%] h-[14rem] bg-[#a8c2f9] p-2 rounded-lg' href={{ pathname: '/(hometabs)/(previewitem)', params: { category: item.catVal, categoryTitle: item.catName } }}>
+                        <Link key={index} style={{width: width*0.4, height: height*0.25}} className=' bg-[#a8c2f9] p-2 rounded-lg' href={{ pathname: '/(hometabs)/(previewitem)', params: { category: item.catVal, categoryTitle: item.catName } }}>
                             <View className='w-[100%] h-[100%]'>
                                 <View className='w-[100%] h-[80%] bg-[#7c91bc] rounded-lg'>
                                     <Image source={item.img} className='w-full h-full rounded-lg' />

@@ -1,6 +1,6 @@
 const localServer = 'http://192.168.1.10:2412';
-const cloudServer = '';
-const ApiServer = localServer;
+const cloudServer = 'https://orderingserver-1.onrender.com';
+const ApiServer = cloudServer;
 
 export const fetchItemByCategory = `${ApiServer}/mobile/fetchItemsByCategory`;
 export const fetchAllTables = `${ApiServer}/mobile/fetchAllTables`;

@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, Image, ScrollView, Modal, StyleSheet, ToastAndroid } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ScrollView, Modal, StyleSheet, ToastAndroid, Dimensions } from 'react-native'
+const { width, height } = Dimensions.get('window');
 import React, { useEffect, useState, useContext } from 'react'
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
@@ -70,12 +71,12 @@ const index = () => {
             <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: '100%' }} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 30, padding: 20 }}>
                 {items?.map((item, index) => {
                     return (
-                        <TouchableOpacity key={index} className='bg-[#fff] rounded-xl elevation-md w-[12rem] h-[14rem] items-center overflow-hidden' onPress={() => openModal(item)}>
+                        <TouchableOpacity key={index} style={{width: width*0.4,height: height*0.26}} className='bg-[#fff] rounded-xl elevation-md items-center overflow-hidden relative' onPress={() => openModal(item)}>
                             <View>
-                                <Image source={{ uri: item.photoUrl }} className='w-[12rem] h-[12rem]' />
+                                <Image source={{ uri: item.photoUrl }}  style={{width: width*0.5, height: height*0.21}} />
                             </View>
-                            <View className='w-[100%] bg-[#368eef] items-center'>
-                                <Text className='text-2xl font-semibold text-white'>{item.name}</Text>
+                            <View className='w-[100%] h-[100%] bg-[#368eef]'>
+                                <Text style={{fontSize: width*0.04}} className=' font-semibold text-white text-center'>{item.name}</Text>
                             </View>
                         </TouchableOpacity>
                     )
