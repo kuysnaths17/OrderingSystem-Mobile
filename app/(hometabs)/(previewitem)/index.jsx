@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, ScrollView, Modal, StyleSheet, ToastAndroid, Dimensions } from 'react-native'
+import { View, Text, TouchableOpacity, Image, ScrollView, Modal, StyleSheet, ToastAndroid, Dimensions, ActivityIndicator } from 'react-native'
 const { width, height } = Dimensions.get('window');
 import React, { useEffect, useState, useContext } from 'react'
 import { useRoute } from '@react-navigation/native';
@@ -47,7 +47,7 @@ const index = () => {
     };
 
     const addItemToCart = (selectedItem) => {
-        if(!isLoggedIn){
+        if (!isLoggedIn) {
             ToastAndroid.show("Please login/create an account to add item to cart", ToastAndroid.LONG);
             closeModal();
             return;
@@ -68,20 +68,30 @@ const index = () => {
             <View className='relative py-8 bg-[#f4f9ff]'>
                 <Text className='text-4xl font-bold text-gray-900 text-center' animation={'tada'}>{categoryTitle}</Text>
             </View>
-            <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: '100%' }} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 30, padding: 20 }}>
-                {items?.map((item, index) => {
-                    return (
-                        <TouchableOpacity key={index} style={{width: width*0.4,height: height*0.26}} className='bg-[#fff] rounded-xl elevation-md items-center overflow-hidden relative' onPress={() => openModal(item)}>
-                            <View>
-                                <Image source={{ uri: item.photoUrl }}  style={{width: width*0.5, height: height*0.21}} />
-                            </View>
-                            <View className='w-[100%] h-[100%] bg-[#368eef]'>
-                                <Text style={{fontSize: width*0.04}} className=' font-semibold text-white text-center'>{item.name}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )
-                })}
-            </ScrollView>
+            {
+                !setItems ? (
+                    <View className='flex flex-wrap justify-center'>
+                        <ActivityIndicator size="large" color="#368eef" />
+                    </View>
+
+                ) : (
+                    <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: '100%' }} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 30, padding: 20 }}>
+                        {items?.map((item, index) => {
+                            return (
+                                <TouchableOpacity key={index} style={{ width: width * 0.4, height: height * 0.26 }} className='bg-[#fff] rounded-xl elevation-md items-center overflow-hidden relative' onPress={() => openModal(item)}>
+                                    <View>
+                                        <Image source={{ uri: item.photoUrl }} style={{ width: width * 0.5, height: height * 0.21 }} />
+                                    </View>
+                                    <View className='w-[100%] h-[100%] bg-[#368eef]'>
+                                        <Text style={{ fontSize: width * 0.04 }} className=' font-semibold text-white text-center'>{item.name}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </ScrollView>
+                )
+            }
+
             {selectedItem && (
                 <Modal
                     animationType="slide"
@@ -104,10 +114,10 @@ const index = () => {
                                 <Text style={styles.modalDetails}>Available: {selectedItem.quantity}</Text>
                             </View>
                             <View className='gap-2'>
-                                <TouchableOpacity style={[styles.closeButton, {backgroundColor:'#2ec193'}]} onPress={()=>addItemToCart(selectedItem)}>
+                                <TouchableOpacity style={[styles.closeButton, { backgroundColor: '#2ec193' }]} onPress={() => addItemToCart(selectedItem)}>
                                     <Text style={styles.closeButtonText}>Add to cart</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.closeButton, {backgroundColor:'#e65d82'}]} onPress={closeModal}>
+                                <TouchableOpacity style={[styles.closeButton, { backgroundColor: '#e65d82' }]} onPress={closeModal}>
                                     <Text style={styles.closeButtonText}>Close</Text>
                                 </TouchableOpacity>
                             </View>
@@ -115,7 +125,7 @@ const index = () => {
                     </View>
                 </Modal>
             )}
-            
+
         </View>
     )
 }

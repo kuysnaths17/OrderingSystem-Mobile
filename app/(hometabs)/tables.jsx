@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, ScrollView, Modal, ToastAndroid } from 'react-native'
+import { StyleSheet, TouchableOpacity, ScrollView, Modal, ToastAndroid, ActivityIndicator } from 'react-native'
 import React, { useEffect, useContext } from 'react'
 import Header from '@/components/header';
 import axios from 'axios';
@@ -40,37 +40,46 @@ const tables = () => {
     setIsModalVisible(false);
     nav.jumpTo('(mycart)')
   };
-  
+
   return (
     <View className='flex-1'>
       <Header />
       <View className='relative py-8 bg-[#f4f9ff]'>
         <Text className='text-4xl font-bold text-gray-900 text-center' animation={'tada'}>Tables</Text>
       </View>
-      <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: '100%' }} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-        {
-          tables?.map((table, index) => (
-            <TouchableOpacity key={index} className='bg-[#a8c2f9] p-4 rounded-lg m-2 w-[45%] h-[14rem]'
-              onPress={() => {
-                if(!isloggedIn){
-                  ToastAndroid.show("Please login/create an account to reserve a table", ToastAndroid.LONG);
-                  return;
-                }
-                setSelectedTable({tableNumber: table.tableNumber, status:table.status, tableID: table._id});
-                setIsModalVisible(true);
-              }}
-              disabled={table.status === 'reserved' || table.status === 'occupied' ? true : false}
-              >
-              <View className='bg-[#7c91bc] p-10'>
-                <Text className='text-center font-bold text-7xl text-[#f4f9ff]'>{table.tableNumber}</Text>
-              </View>
-              <View>
-                <Text className='text-center text-3xl font-bold' style={{ color: table.status === 'available' ? '#008a61' : table.status === 'occupied' ? '#f15a44' : null }}>{table.status}</Text>
-              </View>
-            </TouchableOpacity>
-          ))
-        }
-      </ScrollView>
+      {
+        !tables ? (
+          <View className='flex flex-wrap justify-center'>
+            <ActivityIndicator size="large" color="#368eef" />
+          </View>
+        ) : (
+          <ScrollView showsVerticalScrollIndicator={true} style={{ maxHeight: '100%' }} contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+            {
+              tables?.map((table, index) => (
+                <TouchableOpacity key={index} className='bg-[#a8c2f9] p-4 rounded-lg m-2 w-[45%] h-[14rem]'
+                  onPress={() => {
+                    if (!isloggedIn) {
+                      ToastAndroid.show("Please login/create an account to reserve a table", ToastAndroid.LONG);
+                      return;
+                    }
+                    setSelectedTable({ tableNumber: table.tableNumber, status: table.status, tableID: table._id });
+                    setIsModalVisible(true);
+                  }}
+                  disabled={table.status === 'reserved' || table.status === 'occupied' ? true : false}
+                >
+                  <View className='bg-[#7c91bc] p-10'>
+                    <Text className='text-center font-bold text-7xl text-[#f4f9ff]'>{table.tableNumber}</Text>
+                  </View>
+                  <View>
+                    <Text className='text-center text-3xl font-bold' style={{ color: table.status === 'available' ? '#008a61' : table.status === 'occupied' ? '#f15a44' : null }}>{table.status}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            }
+          </ScrollView>
+        )
+      }
+
       <Modal
         animationType="slide"
         transparent={true}

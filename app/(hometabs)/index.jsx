@@ -11,8 +11,8 @@ import { getUser, deleteUser, checkLoggedIn } from '@/constants/storageUtils';
 
 import maincourse from '@/assets/images/maincourse.jpg';
 import appetizer from '@/assets/images/appetizer.jpg';
-import dessert from '@/assets/images/dessert.png';
-import beverages from '@/assets/images/beverages.png';
+import dessert from '@/assets/images/dessert.jpeg';
+import beverages from '@/assets/images/beverages.jpeg';
 import { useMMKVBoolean } from 'react-native-mmkv';
 
 const categs = [
