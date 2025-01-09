@@ -70,6 +70,7 @@ const login = () => {
                             <Ionicons name={passwordVisible ? 'eye-off' : 'eye'} size={24} color='gray' />
                         </TouchableOpacity>
                     </View>
+                    
                     <View className='flex justify-center items-center mt-10'>
                         <TouchableOpacity className='w-[100%] h-[4rem] bg-[#368eef] rounded-xl justify-center items-center' onPress={() => handleLogin()}>
                             {loading ? (
@@ -79,8 +80,14 @@ const login = () => {
                             )}
                         </TouchableOpacity>
                     </View>
+                    <View className='flex justify-center items-center mt-6'>
+                        <TouchableOpacity onPress={()=> nav.navigate('forgotpassword')}>
+                            <Text className='text-xl font-bold text-[#368EEF]'>forgot password</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </ScrollView>
+
         </View>
     )
 }

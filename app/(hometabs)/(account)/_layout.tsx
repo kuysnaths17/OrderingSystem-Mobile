@@ -23,6 +23,11 @@ export default function RootLayout() {
                 headerTitle: "",
                 headerTintColor: "#368EEF",
             }} />
+            <Stack.Screen name="forgotpassword" options={{
+                headerTransparent: true,
+                headerTitle: "",
+                headerTintColor: "#368EEF",
+            }} />
         </Stack>
     )
 }
